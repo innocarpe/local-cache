@@ -30,7 +30,7 @@ async function run(): Promise<void> {
     const key = core.getInput('key')
     const base = core.getInput('base')
     const path = core.getInput('path')
-    const hardCopy = core.getInput('hard-copy') === 'true'
+    const hardCopy = core.getBooleanInput('hard-copy')
     const cacheBase = getCacheBase(base)
     const cachePath = getCachePath(key, base)
 
@@ -53,7 +53,7 @@ async function run(): Promise<void> {
 
     if (cacheHit === true) {
       let command
-      if (hardCopy === true) {
+      if (hardCopy) {
         // 실제로 하드 카피
         command = `cp -R ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`
       } else {
@@ -64,7 +64,7 @@ async function run(): Promise<void> {
 
       core.debug(result.stdout)
       if (result.stderr) core.error(result.stderr)
-      if (hardCopy === 'true') {
+      if (hardCopy) {
         if (!result.stderr) core.info(`[Hard Copy] Cache restored with key ${key}`)
       } else {
         if (!result.stderr) core.info(`[Symbolic Link] Cache restored with key ${key}`)
