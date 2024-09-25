@@ -26209,7 +26209,7 @@ function run() {
             const cleanKey = core.getInput('clean-key');
             const CLEAN_TIME = 7;
             if (cleanKey) {
-                const findCommand = `/bin/bash -c "find ${cacheBase} -depth 1 -name '${cleanKey}*' -type d -atime +${CLEAN_TIME} -exec rm -rf {} +"`;
+                const findCommand = `/bin/bash -c "find ${cacheBase} -depth 1 -name '${cleanKey}*' -type d -atime +${CLEAN_TIME} -exec rm -rf {} \\;"`;
                 core.debug(`Executing find command: ${findCommand}`);
                 const findResult = yield exec.getExecOutput(findCommand);
                 core.debug(findResult.stdout);
