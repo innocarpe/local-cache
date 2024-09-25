@@ -10,12 +10,14 @@ import {
 
 async function run(): Promise<void> {
   try {
-    const cacheBase = core.getState('cache-base')
+    const base = core.getInput('base')
+    const cacheBase = getCacheBase(base)
+
     const cleanKey = core.getInput('clean-key')
-    const CLEAN_TIME = 7
+    const CACHE_EXPIRATION_DAYS = 7 // 캐시 만료 기간 (일)
 
     if (cleanKey) {
-      const findCommand = `/bin/bash -c "find ${cacheBase} -depth 1 -name '${cleanKey}*' -type d -atime +${CLEAN_TIME} -exec rm -rf {} \\;"`
+      const findCommand = `/bin/bash -c "find ${cacheBase} -depth 1 -name '${cleanKey}*' -type d -atime +${CACHE_EXPIRATION_DAYS} -exec rm -rf {} \\;"`
       core.debug(`Executing find command: ${findCommand}`)
       const findResult = await exec.getExecOutput(findCommand)
 
