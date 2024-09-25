@@ -30,7 +30,7 @@ async function run(): Promise<void> {
     const key = core.getInput('key')
     const base = core.getInput('base')
     const path = core.getInput('path')
-    const hardCopy = core.getBooleanInput('hard-copy')
+    const hardCopy = core.getInput('hard-copy') === 'true'
     const cacheBase = getCacheBase(base)
     const cachePath = getCachePath(key, base)
 
