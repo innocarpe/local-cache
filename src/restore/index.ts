@@ -30,9 +30,14 @@ async function run(): Promise<void> {
     const key = core.getInput('key')
     const base = core.getInput('base')
     const path = core.getInput('path')
-    const hardCopy = core.getInput('hard-copy') === 'true'
+    // const hardCopy = core.getInput('hard-copy') === 'true'
+    const hardCopyInput = core.getInput('hard-copy')
+    const hardCopy = hardCopyInput === 'true'
     const cacheBase = getCacheBase(base)
     const cachePath = getCachePath(key, base)
+
+    core.debug(`Input - hard-copy (raw): ${hardCopyInput}`)
+    core.debug(`Processed - hardCopy: ${hardCopy}`)
 
     checkKey(key)
     checkPaths([path])
