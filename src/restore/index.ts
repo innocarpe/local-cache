@@ -36,8 +36,8 @@ async function run(): Promise<void> {
     const cacheBase = getCacheBase(base)
     const cachePath = getCachePath(key, base)
 
-    core.debug(`Input - hard-copy (raw): ${hardCopyInput}`)
-    core.debug(`Processed - hardCopy: ${hardCopy}`)
+    core.info(`Input - hard-copy (raw): ${hardCopyInput}`)
+    core.info(`Processed - hardCopy: ${hardCopy}`)
 
     checkKey(key)
     checkPaths([path])
@@ -58,22 +58,24 @@ async function run(): Promise<void> {
 
     if (cacheHit === true) {
       let command
-      if (hardCopy) {
-        // 실제로 하드 카피
-        command = `cp -R ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`
-      } else {
-        // 심볼릭 링크만 생성
-        command = `ln -s ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`
-      }
+      command = `cp -R ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`
+      // if (hardCopy) {
+      //   // 실제로 하드 카피
+      //   command = `cp -R ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`
+      // } else {
+      //   // 심볼릭 링크만 생성
+      //   command = `ln -s ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`
+      // }
       const result = await exec(command)
 
-      core.debug(result.stdout)
+      core.info(result.stdout)
       if (result.stderr) core.error(result.stderr)
-      if (hardCopy) {
-        if (!result.stderr) core.info(`[Hard Copy] Cache restored with key ${key}`)
-      } else {
-        if (!result.stderr) core.info(`[Symbolic Link] Cache restored with key ${key}`)
-      }
+      if (!result.stderr) core.info(`[Hard Copy] Cache restored with key ${key}`)
+      // if (hardCopy) {
+      //   if (!result.stderr) core.info(`[Hard Copy] Cache restored with key ${key}`)
+      // } else {
+      //   if (!result.stderr) core.info(`[Symbolic Link] Cache restored with key ${key}`)
+      // }
     } else {
       core.info(`Cache not found for ${key}`)
     }
