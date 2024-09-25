@@ -6,6 +6,7 @@
   "main": "lib/restore/index.js",
   "scripts": {
     "build": "tsc",
+    "package": "ncc build src/restore/index.ts -o dist/restore",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
