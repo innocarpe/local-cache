@@ -45,6 +45,12 @@ Default: /home/ubuntu/.cache
 
 If set, caches that have not been accessed over 7 days are cleaned up automatically at post action stage by clean-key.
 
+`hard-copy`
+
+**Optional**
+
+If set, caches are hard-copied to target folder instead of symbolic link.
+
 ### Outputs
 
 `cache-hit`
