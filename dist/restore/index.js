@@ -26199,19 +26199,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
+const exec = __importStar(__nccwpck_require__(5236));
 const p = __importStar(__nccwpck_require__(6928));
 const cache_1 = __nccwpck_require__(4915);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            /*
-              clean up caches
-            */
             const cacheBase = core.getState('cache-base');
             const cleanKey = core.getInput('clean-key');
             const CLEAN_TIME = 7;
             if (cleanKey) {
-                yield (0, cache_1.exec)(`/bin/bash -c "find ${cacheBase} -maxdepth 1 -name '${cleanKey}*' -type d -atime +${CLEAN_TIME} -exec rm -rf {} +"`);
+                const findCommand = `/bin/bash -c "find ${cacheBase} -depth 1 -name '${cleanKey}*' -type d -atime +${CLEAN_TIME} -exec rm -rf {} +"`;
+                core.debug(`Executing find command: ${findCommand}`);
+                const findResult = yield exec.getExecOutput(findCommand);
+                core.debug(findResult.stdout);
+                if (findResult.stderr)
+                    core.error(findResult.stderr);
             }
         }
         catch (error) {
@@ -26232,8 +26235,8 @@ function run() {
             core.saveState('hard-copy', String(hardCopy));
             core.saveState('cache-base', cacheBase);
             core.saveState('cache-path', cachePath);
-            yield (0, cache_1.exec)(`mkdir -p ${cacheBase}`);
-            const find = yield (0, cache_1.exec)(`find ${cacheBase} -maxdepth 1 -name ${key} -type d`);
+            yield exec.exec(`mkdir -p ${cacheBase}`);
+            const find = yield exec.getExecOutput(`find ${cacheBase} -depth 1 -name ${key} -type d`);
             const cacheHit = find.stdout ? true : false;
             core.saveState('cache-hit', String(cacheHit));
             core.setOutput('cache-hit', String(cacheHit));
@@ -26247,7 +26250,7 @@ function run() {
                     // 심볼릭 링크만 생성
                     command = `ln -s ${p.join(cachePath, path.split('/').slice(-1)[0])} ./${path}`;
                 }
-                const result = yield (0, cache_1.exec)(command);
+                const result = yield exec.getExecOutput(command);
                 core.info(result.stdout);
                 if (result.stderr)
                     core.error(result.stderr);
