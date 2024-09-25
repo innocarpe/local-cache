@@ -6,11 +6,10 @@
   "main": "lib/restore/index.js",
   "scripts": {
     "build": "tsc",
-    "package": "ncc build src/restore/index.ts -o dist/restore",
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
+    "package": "ncc build src/restore/index.ts -o dist/restore --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
